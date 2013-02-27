@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e31aac18-b790-4d02-9bbe-6d7e7cfb541d}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmalgo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmalgo_impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmalloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmblocks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmconst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmdef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmfunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmfwd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmgamma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmserial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmsse2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmsse4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmsse_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmtrans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmundef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmvmin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="encoding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
