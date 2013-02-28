@@ -13,6 +13,15 @@ namespace astar {
 template< size_t N, size_t M >
 class AStar2D {
 public:
+    struct penalty_t {
+        unsigned char  content[ N ][ M ];
+
+        inline penalty_t() {
+            std::memset( content,  0,  N * M );
+        }
+    };
+
+
     struct risk_t {
         unsigned char  content[ N ][ M ];
 
@@ -20,12 +29,6 @@ public:
             std::memset( content,  0,  N * M );
         }
     };
-
-
-    typedef risk_t  penalty_t;
-
-
-    typedef std::vector< unsigned char >  path_t;
 
 
     struct coord_t {
@@ -65,6 +68,10 @@ public:
             return ((x + N * y) < (b.x + N * b.y));
         }
     };
+
+
+    typedef std::vector< unsigned char >  pathDirection_t;
+    typedef std::vector< coord_t >  pathCoord_t;
 
 
     /**
@@ -150,7 +157,13 @@ public:
 
 
 
-    AStar2D( const risk_t&, const penalty_t& );
+    const penalty_t  penalty;
+    const risk_t     risk;
+
+
+
+
+    AStar2D( const penalty_t&, const risk_t& );
 
 
 
@@ -164,16 +177,64 @@ public:
     * @return Путь в виде списка, где перечислены направления движения
     *         от точки 'from' до 'to'.
     *
-    * # Пустой результат - путь не найден.
+    * # Пустой результат - путь не существует.
     */
-    path_t path( const coord_t& from,  const coord_t& to ) const;
+    void path( const coord_t& from,  const coord_t& to );
+
+
+
+
+    /**
+    * @return Путь, вычисленный в path( from, to ).
+    *
+    * # Пустой результат - путь не вычислен или не существует.
+    */
+    inline pathDirection_t const&  pathDirection() const {
+        return mPathDirection;
+    }
+
+
+    pathCoord_t const&  pathCoord() const;
+
+
+
+
+    /**
+    * @return Начальная и конечная точки маршрута, запомненные при
+    *         вызове path( from, to ).
+    */
+    inline std::pair< coord_t, coord_t > const&  pathPoint() const {
+        return mPathPoint;
+    }
+
+
+
+
+    /**
+    * @return Карта, построенная при вызове path( from, to ).
+    */
+    inline unsigned char direction( int x, int y ) const {
+        return mDirection[ x + N * y ];
+    }
 
 
 
 
 private:
-    risk_t     risk;
-    penalty_t  penalty;
+    /**
+    * Начальная / конечная точки и путь, полученные при последнем вызове
+    * path( from, to ).
+    */
+    std::pair< coord_t, coord_t >  mPathPoint;
+    pathDirection_t  mPathDirection;
+    mutable pathCoord_t      mPathCoord;
+
+    /**
+    * Вспомогательные карты.
+    */
+    unsigned char  mDirection[ N * M ];
+    int            open[ N * M ];
+    bool           close[ N * M ];
 };
 
 

@@ -78,10 +78,14 @@
   <ItemGroup>
     <ClInclude Include="include\configure.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\io\TextVisual.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\astar2d-visualtest.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\io\TextVisual.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

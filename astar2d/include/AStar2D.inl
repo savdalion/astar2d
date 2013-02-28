@@ -19,12 +19,14 @@ AStar2D< N, M >::SHIFT[ DIRECTION ] = {
 
 template< size_t N, size_t M >
 inline AStar2D< N, M >::AStar2D(
-    const risk_t& risk,
-    const penalty_t& penalty
+    const penalty_t& penalty,
+    const risk_t& risk
 ) :
     risk( risk ),
     penalty( penalty )
 {
+    static const coord_t ZERO = { 0, 0 };
+    mPathPoint = std::make_pair( ZERO, ZERO );
 }
 
 
@@ -38,25 +40,19 @@ inline AStar2D< N, M >::~AStar2D() {
 
 
 template< size_t N, size_t M >
-inline typename AStar2D< N, M >::path_t
-AStar2D< N, M >::path(
-    const coord_t& from,
-    const coord_t& to
-) const {
+inline void AStar2D< N, M >::path( const coord_t& from, const coord_t& to ) {
 
-    path_t p;
+    // запоминаем начальную и конечную точки маршрута
+    mPathPoint = std::make_pair( from, to );
 
     std::priority_queue< Node >  pq[ 2 ];
     size_t index = 0;
 
     // инициализируем вспомогательные карты
-    unsigned char  direction[ N * M ];
-    int            open[ N * M ];
-    bool           close[ N * M ];
     for (size_t y = 0; y < M; ++y) {
         for (size_t x = 0; x < N; ++x) {
             const size_t i = x + N * y;
-            direction[ i ] = 0;
+            mDirection[ i ] = 0;
             open[ i ] = 0;
             close[ i ] = false;
         }
@@ -85,10 +81,13 @@ AStar2D< N, M >::path(
 
         if (coord == to) {
             // собираем найденный путь
+            mPathDirection.clear();
+            mPathCoord.clear();
             coord_t c = coord;
             while (c != from) {
-                const auto k = direction[ c.x + N * c.y ];
-                p.push_back( k );
+                const auto k = mDirection[ c.x + N * c.y ];
+                mPathDirection.push_back( k );
+                // # mPathCoord соберём при вызове pathCoord().
                 c -= SHIFT[ k ];
             }
             break;
@@ -107,7 +106,9 @@ AStar2D< N, M >::path(
             }
 
             // проходимость клетки
-            if (risk.content[ shift.x ][ shift.y ] != 0) {
+            if (penalty.content[ shift.x ][ shift.y ] ==
+                  std::numeric_limits< unsigned char >::max())
+            {
                 continue;
             }
 
@@ -126,7 +127,7 @@ AStar2D< N, M >::path(
             if (open[ si ] == 0) {
                 open[ si ] = nb.priority;
                 // отмечаем направление
-                direction[ si ] = static_cast< unsigned char >( k );
+                mDirection[ si ] = static_cast< unsigned char >( k );
                 // добавляем узел в очередь
                 pq[ index ].push( nb );
                 continue;
@@ -136,7 +137,7 @@ AStar2D< N, M >::path(
             if (open[ si ] > nb.priority) {
                 open[ si ] = nb.priority;
                 // отмечаем направление
-                direction[ si ] = static_cast< unsigned char >( k );
+                mDirection[ si ] = static_cast< unsigned char >( k );
 
                 // заменям узел
                 const auto& top = pq[ index ].top();
@@ -176,12 +177,30 @@ AStar2D< N, M >::path(
             return (v != 0);
     } );
     const std::size_t countDirection = std::count_if(
-        direction,  direction + N * M,  [] ( unsigned char v ) -> bool {
+        mDirection,  mDirection + N * M,  [] ( unsigned char v ) -> bool {
             return (v != 0);
     } );
+}
 
 
-    return p;
+
+
+template< size_t N, size_t M >
+inline typename AStar2D< N, M >::pathCoord_t const&
+AStar2D< N, M >::pathCoord() const {
+
+    if ( mPathCoord.empty() ) {
+        coord_t coord = mPathPoint.first;
+        for (auto itr = mPathDirection.cbegin();
+             itr != mPathDirection.cend();
+             ++itr
+        ) {
+            mPathCoord.push_back( coord );
+            coord += SHIFT[ *itr ];
+        }
+    }
+
+    return mPathCoord;
 }
 
 
